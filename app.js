@@ -22,9 +22,9 @@ function resetData() {
     barChart.html("");
     bubbleChart.html("");
     guageChart.html("");
-};
+    idpick.html("");
+    };
 
-//Create bar chart of samples
 function plotCharts(id) {
     d3.json("data/samples.json").then((data => {
         var indiv = data.metadata.filter(participant => participant.id == id)[0];
@@ -37,60 +37,45 @@ function plotCharts(id) {
             listItem.attr("class", "list-group-item p-1 demo-text bg-transparent");
             listItem.text(`${key}: $(value)`);
             console.log(listItem);
-        })
-    }))
-}
+        });
+        var indiv = data.sameples.filter(sample => sample.id == id)[0];
+        var otuIds = [];
+        var otuLabels = [];
+        var sampleValues = [];
 
+        Object.defineProperties(indiv).forEach(([key, value]) => {
+            switch (key) {
+                case "otu_ids":
+                    otuIds.push(value);
+                    break;
+                case "sample_values":
+                    sampleValues.push(value);
+                    break;
+                case "otu_labels":
+                    otuLabels.push(value);
+                    break;
+                default:
+                    break;
+            };
+        });
+        var topotuIds = otuIds[0].slice(0,10).reverse();
+        var topotuLabels = otuLabels[0].slice(0,10).reverse();
+        var topsampleValues = sampleValues[0].slice(0,10).reverse();
+        var topotuIdsFormatted = topotuIds.map(otuIds => "OTU" + otuIds);
 
-
-
-// //Create bar chart of samples
-//const id_sample = data.samples.filter(item => parseInt(item.id) == selectedID);
-// // 2. Use filter() to pass the function as its argument
-
-// var filteredMovies = topMovies.filter(filterMovieRatings);
-
-// //  Check to make sure your are filtering your movies.
-
-// console.log(filteredMovies);
-
-// // 3. Use the map method with the arrow function to return all the filtered movie titles.
-
-// var titles = filteredMovies.map(movies => movies.title);
-
-// //  Check your filtered movie titles.
-
-// console.log(titles);
-
-// // 4. Use the map method with the arrow function to return all the filtered movie metascores.
-
-// var ratings = filteredMovies.map(movies => movies.metascore);
-
-
-// //  Check your filtered movie metascores.
-
-// console.log(ratings);
-
-// // 5. Create your trace.
-
-// var trace = {
-//     x: titles,
-//     y: ratings,
-//     type: "bar"
-// };
-
-// // 6. Create the data array for our plot
-
-// var data = [trace];
-
-// // 7. Define our plot layout
-
-// var layout = {
-//     title: "The highest critically acclaimed movies",
-//     xaxis: {title: "titles"},
-//     yaxis: {title: "ratings"}
-// };
-
-// // 8. Plot the chart to a div tag with id "bar-plot"
-
-//Plotly.newPlot("bar-plot", data, layout);
+        var trace = {
+            x: topsampleValues,
+            y: topotuIdsFormatted,
+            text: topotuLabels,
+            type: "bar",
+            orientation: "h",
+        };
+        var data = [trace];
+        var layout = {
+            height: 500,
+            width: 600,
+            title: "Top 10 OTU's", 
+        }
+        Plotly.newPlot("bar", dataBar, layoutBar);
+    }
+    ))};
