@@ -7,6 +7,7 @@ function optionChanged(pickID) {
 };
 
 // Create function to grab information from JSON file and create dropdown selection 
+// Create link to chart functions
 function init(){
     var dropdown = d3.select("#selDataset");
     d3.json("data/samples.json").then((data) => {
@@ -22,13 +23,10 @@ function init(){
 
 init();
 
-
-// Create tables for website - bar, demographic and guage chart
 // Bar chart
 function getidPlot(id) {
     d3.json("data/samples.json").then((data) => {
         console.log(data);   
-    //var wfreq = data.metadata.map(d => d.wfreq);
     var samples = data.samples.filter(item =>  item.id.toString() === id)[0];
     var sampleValue = (samples.sample_values.slice(0,10).reverse());
     var otuID = (samples.otu_ids.slice(0,10).reverse());
@@ -83,9 +81,10 @@ function getidPlot(id) {
     };
 
     Plotly.newPlot("bubble", data1, layout1, {responsive: true});
+    });
 };
 
-    // Fill in Demographic Information on chart
+// Fill in Demographic Information on chart and Create Gauge
 function getidInfo(id) {
     d3.json("data/samples.json").then((data) => {
         var metadata = data.metadata;
@@ -97,8 +96,7 @@ function getidInfo(id) {
             demoInfo.append("p").text(key[0] + ": " + key[1]);
         var wfreq = results.wfreq;
         console.log(wfreq);
-        });
-    });
+
 // Gauge Chart
     var data2 = [
         {
@@ -109,7 +107,6 @@ function getidInfo(id) {
         mode: "gauge+number",
         gauge: {
             axis: {range: [null, 9]},
-            bar: {color: "darkblue"},
             borderwidth: 2,
             bordercolor: "gray",
             steps: [
@@ -133,8 +130,8 @@ function getidInfo(id) {
     };
 
     Plotly.newPlot("gauge", data2, layout2, {responsive: true});
-
-
-    };
+    });
     });
 };
+
+
