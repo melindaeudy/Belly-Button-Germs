@@ -1,4 +1,6 @@
 # Belly Button Biodiversity Interactive Dashboard
+https://melindaeudy.github.io/Interactive-Visualization-Dashboard-Challenge/	
+
 This site will convince you to wash your belly button daily!
 
 This website was created using HTML5, Javascript, D3 and Plotly.
